@@ -48,11 +48,11 @@ public class Battleship {
 
         System.out.println("Ход противника");
 
-        if (Objects.equals(user.field[line][column], "●")) {
+        if (Objects.equals(user.getField()[line][column], "●")) {
 
-            user.field[line][column] = "†";
+            user.getField()[line][column] = "†";
 
-            if (checkWin(user.field)) {
+            if (checkWin(user.getField())) {
                 finish = true;
 
                 System.out.println("Противник победил!");
@@ -62,7 +62,7 @@ public class Battleship {
             opponentStep();
         } else {
 
-            user.field[line][column] = "-";
+            user.getField()[line][column] = "-";
             user.printField();
         }
 
@@ -75,17 +75,17 @@ public class Battleship {
         System.out.println("твой ход");
 
         String input = sc.nextLine().toLowerCase();
-        int column = opponent.columnNames.get(String.valueOf(input.charAt(0)));
+        int column = opponent.getColumnNames().get(String.valueOf(input.charAt(0)));
         int line = Integer.parseInt(input.substring(1));
 
-        if (Objects.equals(opponent.field[line][column], "●")) {
+        if (Objects.equals(opponent.getField()[line][column], "●")) {
 
-            opponent.field[line][column] = "†";
-            opponent.gameField[line][column] = "†";
+            opponent.getField()[line][column] = "†";
+            opponent.getGameField()[line][column] = "†";
 
             System.out.println("Попал! Следующий ход тоже за тобой");
 
-            if (checkWin(opponent.field)) {
+            if (checkWin(opponent.getField())) {
 
                 finish = true;
 
@@ -95,7 +95,7 @@ public class Battleship {
             userStep();
         } else {
 
-            opponent.gameField[line][column] = "-";
+            opponent.getGameField()[line][column] = "-";
 
             opponent.printGameField();
             System.out.println("Мимо. Переход хода");
@@ -127,9 +127,9 @@ public class Battleship {
             while (sc.hasNext()) {
 
                 String[] xx = sc.nextLine().split(" ");
-                int column = opponent.columnNames.get(xx[0]);
+                int column = opponent.getColumnNames().get(xx[0]);
                 int line = Integer.parseInt(xx[1]);
-                opponent.field[line][column] = "●";
+                opponent.getField()[line][column] = "●";
             }
 
         } catch (FileNotFoundException e) {
@@ -204,18 +204,18 @@ public class Battleship {
 
             for (int line = headField; line <= tailField; line++) {
 
-                int column = user.columnNames.get(headColumn);
-                user.field[line][column] = "●";
+                int column = user.getColumnNames().get(headColumn);
+                user.getField()[line][column] = "●";
 
-                user.limiters.add(headColumn + line);
+                user.getLimiters().add(headColumn + line);
             }
         } else {
 
-            for (int i = user.columnNames.get(headColumn); i <= user.columnNames.get(tailColumn); i++) {
+            for (int i = user.getColumnNames().get(headColumn); i <= user.getColumnNames().get(tailColumn); i++) {
 
-                user.field[headField][i] = "●";
+                user.getField()[headField][i] = "●";
 
-                user.limiters.add(user.fieldNames.get(i) + headField);
+                user.getLimiters().add(user.getFieldNames().get(i) + headField);
             }
         }
     }
@@ -244,7 +244,7 @@ public class Battleship {
 
         for (String string : lim) {
 
-            if (user.limiters.contains(string)) {
+            if (user.getLimiters().contains(string)) {
 
                 System.out.println("Нельзя ставить настолько близко к другому кораблю");
                 throw new ConflictException();
@@ -258,8 +258,8 @@ public class Battleship {
 
         if (Objects.equals(headColumn, tailColumn)) {
 
-            String prev = user.fieldNames.get(user.columnNames.get(headColumn) - 1);
-            String next = user.fieldNames.get(user.columnNames.get(headColumn) + 1);
+            String prev = user.getFieldNames().get(user.getColumnNames().get(headColumn) - 1);
+            String next = user.getFieldNames().get(user.getColumnNames().get(headColumn) + 1);
 
             for (int i = headLine - 1; i <= tailLine + 1 && i <= 10; i++) {
 
@@ -272,9 +272,9 @@ public class Battleship {
             int prev = headLine - 1;
             int next = headLine + 1;
 
-            for (int i = user.columnNames.get(headColumn) - 1; i <= user.columnNames.get(tailColumn) + 1; i++) {
+            for (int i = user.getColumnNames().get(headColumn) - 1; i <= user.getColumnNames().get(tailColumn) + 1; i++) {
 
-                String letter = user.fieldNames.get(i);
+                String letter = user.getFieldNames().get(i);
 
                 if (i == 0 || letter == null) {
 
@@ -301,8 +301,8 @@ public class Battleship {
             }
         } else if (Objects.equals(headLine, tailLine)) {
 
-            int head = user.columnNames.get(headColumn);
-            int tail = user.columnNames.get(tailColumn);
+            int head = user.getColumnNames().get(headColumn);
+            int tail = user.getColumnNames().get(tailColumn);
 
             if (size != (tail - head + 1)) {
 
@@ -319,10 +319,10 @@ public class Battleship {
 
     private void inputChecking(String headColumn, String tailColumn, Integer headLine, Integer tailLine) {
 
-        if (!user.columnNames.containsKey(headColumn) ||
-                !user.columnNames.containsKey(tailColumn) ||
-                !user.fieldNames.containsKey(headLine) ||
-                !user.fieldNames.containsKey(tailLine)) {
+        if (!user.getColumnNames().containsKey(headColumn) ||
+                !user.getColumnNames().containsKey(tailColumn) ||
+                !user.getFieldNames().containsKey(headLine) ||
+                !user.getFieldNames().containsKey(tailLine)) {
 
             System.out.println("Некорректный ввод");
             throw new ConflictException();
